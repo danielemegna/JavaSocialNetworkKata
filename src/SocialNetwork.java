@@ -1,4 +1,4 @@
-public class SocialNetwork {
+public class SocialNetwork implements ISocialNetwork {
     private final OutputAdapter output;
 
     public SocialNetwork(OutputAdapter output) {

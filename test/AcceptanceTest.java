@@ -15,7 +15,6 @@ public class AcceptanceTest {
         }});
 
         sn.reading("Alice");
-
         context.assertIsSatisfied();
     }
 }
