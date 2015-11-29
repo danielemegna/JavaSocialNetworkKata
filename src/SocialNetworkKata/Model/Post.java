@@ -1,4 +1,5 @@
-import java.util.Date;
+package SocialNetworkKata.Model;
+
 import java.util.GregorianCalendar;
 
 public class Post {

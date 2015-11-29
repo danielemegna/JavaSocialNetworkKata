@@ -1,3 +1,7 @@
+package SocialNetworkKata.IO;
+
+import SocialNetworkKata.ISocialNetwork;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

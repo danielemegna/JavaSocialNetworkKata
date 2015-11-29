@@ -1,5 +1,9 @@
+package SocialNetworkKata;
+
+import SocialNetworkKata.IO.OutputAdapter;
+import SocialNetworkKata.Model.Post;
+
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
