@@ -51,4 +51,31 @@ public class AcceptanceTest {
 
         context.assertIsSatisfied();
     }
+
+    @Test
+    public void aliceAndBobPostingScenario() {
+
+        context.checking(new Expectations() {{
+            exactly(5).of(clock).now();
+            will(onConsecutiveCalls(
+                returnValue(new GregorianCalendar(2015, 12, 06, 17, 5)),
+                returnValue(new GregorianCalendar(2015, 12, 06, 17, 8)),
+                returnValue(new GregorianCalendar(2015, 12, 06, 17, 9)),
+
+                returnValue(new GregorianCalendar(2015, 12, 06, 17, 10)),
+                returnValue(new GregorianCalendar(2015, 12, 06, 17, 10))
+            ));
+
+            oneOf(outputAdapter).printNewMessage("I love the weather today (5 minutes ago)");
+            oneOf(outputAdapter).printNewMessage("Good game though. (1 minute ago)");
+            oneOf(outputAdapter).printNewMessage("Damn! We lost! (2 minutes ago)");
+        }});
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Bob", "Damn! We lost!");
+        socialNetwork.post("Bob", "Good game though.");
+
+        socialNetwork.reading("Alice");
+        socialNetwork.reading("Bob");
+    }
 }
