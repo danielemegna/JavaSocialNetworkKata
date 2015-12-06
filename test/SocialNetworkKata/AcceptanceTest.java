@@ -7,6 +7,7 @@ import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.GregorianCalendar;
 
 public class AcceptanceTest {
@@ -31,19 +32,19 @@ public class AcceptanceTest {
             oneOf(outputAdapter).printNewMessage("");
         }});
 
-        socialNetwork.reading("Alice");
+        socialNetwork.reading("Inexistent");
         context.assertIsSatisfied();
     }
 
     @Test
     public void readingAPostedMessage() {
+        setupClock(
+            date(2015, 11, 29, 00, 35),
+            date(2015, 11, 29, 00, 40)
+        );
+
         context.checking(new Expectations() {{
             oneOf(outputAdapter).printNewMessage("I love the weather today (5 minutes ago)");
-            exactly(2).of(clock).now();
-            will(onConsecutiveCalls(
-                    returnValue(new GregorianCalendar(2015, 11, 29, 00, 35)),
-                    returnValue(new GregorianCalendar(2015, 11, 29, 00, 40))
-            ));
         }});
 
         socialNetwork.post("Alice", "I love the weather today");
@@ -54,18 +55,14 @@ public class AcceptanceTest {
 
     @Test
     public void aliceAndBobPostingScenario() {
-
+        setupClock(
+            date(2015, 12, 06, 17, 5),
+            date(2015, 12, 06, 17, 8),
+            date(2015, 12, 06, 17, 9),
+            date(2015, 12, 06, 17, 10),
+            date(2015, 12, 06, 17, 10)
+        );
         context.checking(new Expectations() {{
-            exactly(5).of(clock).now();
-            will(onConsecutiveCalls(
-                returnValue(new GregorianCalendar(2015, 12, 06, 17, 5)),
-                returnValue(new GregorianCalendar(2015, 12, 06, 17, 8)),
-                returnValue(new GregorianCalendar(2015, 12, 06, 17, 9)),
-
-                returnValue(new GregorianCalendar(2015, 12, 06, 17, 10)),
-                returnValue(new GregorianCalendar(2015, 12, 06, 17, 10))
-            ));
-
             oneOf(outputAdapter).printNewMessage("I love the weather today (5 minutes ago)");
             oneOf(outputAdapter).printNewMessage("Good game though. (1 minute ago)");
             oneOf(outputAdapter).printNewMessage("Damn! We lost! (2 minutes ago)");
@@ -77,5 +74,20 @@ public class AcceptanceTest {
 
         socialNetwork.reading("Alice");
         socialNetwork.reading("Bob");
+    }
+
+    private void setupClock(GregorianCalendar... calendars) {
+        org.jmock.api.Action[] calendarsToActions = Arrays.stream(calendars)
+            .map(c -> org.jmock.Expectations.returnValue(c))
+            .toArray(org.jmock.api.Action[]::new);
+
+        context.checking(new Expectations() {{
+            exactly(calendarsToActions.length).of(clock).now();
+            will(onConsecutiveCalls(calendarsToActions));
+        }});
+    }
+
+    private GregorianCalendar date(int y, int m, int d, int hh, int mm) {
+        return new GregorianCalendar(y, m, d, hh, mm);
     }
 }
