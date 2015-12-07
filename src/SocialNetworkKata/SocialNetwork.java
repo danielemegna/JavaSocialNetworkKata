@@ -2,28 +2,25 @@ package SocialNetworkKata;
 
 import SocialNetworkKata.IO.OutputAdapter;
 import SocialNetworkKata.Model.Post;
+import SocialNetworkKata.Repositories.PostRepository;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.Comparator.comparing;
 
 public class SocialNetwork implements ISocialNetwork {
     private final Clock clock;
     private final OutputAdapter output;
+    private final PostRepository postRepository;
 
-    private List<Post> posts = new ArrayList<Post>();
-
-    public SocialNetwork(Clock clock, OutputAdapter output) {
+    public SocialNetwork(Clock clock, OutputAdapter output, PostRepository postRepository) {
         this.clock = clock;
         this.output = output;
+        this.postRepository = postRepository;
     }
 
     public void reading(String username) {
 
-        List<Post> found = postsOf(username);
+        List<Post> found = postRepository.getByUsername(username);
         if(found.size() == 0) {
             output.printNewMessage("");
             return;
@@ -42,14 +39,7 @@ public class SocialNetwork implements ISocialNetwork {
         }
     }
 
-    private List<Post> postsOf(String username) {
-        return this.posts.stream()
-            .filter(post -> post.getUsername() == username)
-            .sorted(comparing(Post::getDate).reversed())
-            .collect(Collectors.toList());
-    }
-
     public void post(String username, String message) {
-        this.posts.add(new Post(username, message, clock.now()));
+        postRepository.add(username, message, clock.now());
     }
 }

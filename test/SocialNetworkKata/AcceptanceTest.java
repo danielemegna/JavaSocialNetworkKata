@@ -2,6 +2,7 @@ package SocialNetworkKata;
 
 import SocialNetworkKata.IO.OutputAdapter;
 
+import SocialNetworkKata.Repositories.InMemoryPostRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
@@ -23,7 +24,9 @@ public class AcceptanceTest {
         outputAdapter = context.mock(OutputAdapter.class);
         clock = context.mock(Clock.class);
 
-        socialNetwork = new SocialNetwork(clock, outputAdapter);
+        socialNetwork = new SocialNetwork(
+            clock, outputAdapter, new InMemoryPostRepository()
+        );
     }
 
     @Test
