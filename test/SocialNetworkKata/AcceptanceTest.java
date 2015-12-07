@@ -28,9 +28,7 @@ public class AcceptanceTest {
 
     @Test
     public void readingInexistentUsername_printsBlankLine() {
-        context.checking(new Expectations() {{
-            oneOf(outputAdapter).printNewMessage("");
-        }});
+        setupOutputAsserts("");
 
         socialNetwork.reading("Inexistent");
         context.assertIsSatisfied();
@@ -42,10 +40,7 @@ public class AcceptanceTest {
             date(2015, 11, 29, 00, 35),
             date(2015, 11, 29, 00, 40)
         );
-
-        context.checking(new Expectations() {{
-            oneOf(outputAdapter).printNewMessage("I love the weather today (5 minutes ago)");
-        }});
+        setupOutputAsserts("I love the weather today (5 minutes ago)");
 
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.reading("Alice");
@@ -62,11 +57,11 @@ public class AcceptanceTest {
             date(2015, 12, 06, 17, 10),
             date(2015, 12, 06, 17, 10)
         );
-        context.checking(new Expectations() {{
-            oneOf(outputAdapter).printNewMessage("I love the weather today (5 minutes ago)");
-            oneOf(outputAdapter).printNewMessage("Good game though. (1 minute ago)");
-            oneOf(outputAdapter).printNewMessage("Damn! We lost! (2 minutes ago)");
-        }});
+        setupOutputAsserts(
+            "I love the weather today (5 minutes ago)",
+            "Good game though. (1 minute ago)",
+            "Damn! We lost! (2 minutes ago)"
+        );
 
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.post("Bob", "Damn! We lost!");
@@ -74,6 +69,13 @@ public class AcceptanceTest {
 
         socialNetwork.reading("Alice");
         socialNetwork.reading("Bob");
+    }
+
+    private void setupOutputAsserts(String... messages) {
+        context.checking(new Expectations() {{
+            for(String message : messages)
+                oneOf(outputAdapter).printNewMessage(message);
+        }});
     }
 
     private void setupClock(GregorianCalendar... calendars) {
