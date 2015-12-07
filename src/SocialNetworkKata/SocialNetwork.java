@@ -28,14 +28,8 @@ public class SocialNetwork implements ISocialNetwork {
 
         GregorianCalendar now = clock.now();
         for(Post post : found) {
-            long diffInMinutes = post.diffInMinutes(now);
-            String message = String.format(
-                "%s (%d %s ago)",
-                post.getMessage(),
-                diffInMinutes,
-                diffInMinutes > 1 ? "minutes" : "minute"
-            );
-            output.printNewMessage(message);
+            String postToString = post.toString(now);
+            output.printNewMessage(postToString);
         }
     }
 

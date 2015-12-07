@@ -6,6 +6,7 @@ import SocialNetworkKata.Repositories.InMemoryPostRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -74,6 +75,23 @@ public class AcceptanceTest {
         socialNetwork.reading("Bob");
     }
 
+    @Test
+    public void readingMessageSomeSecondsAgo() {
+        setupClock(
+            date(2015, 12, 7, 12, 30, 0),
+            date(2015, 12, 7, 12, 30, 2),
+            date(2015, 12, 7, 12, 30, 3)
+        );
+        setupOutputAsserts(
+            "It's sunny (1 second ago)",
+            "I love the weather today (3 seconds ago)"
+        );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Alice", "It's sunny");
+        socialNetwork.reading("Alice");
+    }
+
     private void setupOutputAsserts(String... messages) {
         context.checking(new Expectations() {{
             for(String message : messages)
@@ -94,5 +112,9 @@ public class AcceptanceTest {
 
     private GregorianCalendar date(int y, int m, int d, int hh, int mm) {
         return new GregorianCalendar(y, m, d, hh, mm);
+    }
+
+    private GregorianCalendar date(int y, int m, int d, int hh, int mm, int ss) {
+        return new GregorianCalendar(y, m, d, hh, mm, ss);
     }
 }
