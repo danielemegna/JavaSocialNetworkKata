@@ -6,9 +6,8 @@ import SocialNetworkKata.Repositories.InMemoryPostRepository;
 import SocialNetworkKata.Repositories.InMemorySubscriptionRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -106,6 +105,7 @@ public class AcceptanceTest {
         setupOutputAsserts(
             "Alice - I love the weather today (5 minutes ago)"
         );
+
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.wall("Alice");
     }
@@ -125,6 +125,52 @@ public class AcceptanceTest {
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
         socialNetwork.subscribe("Charlie", "Alice");
+        socialNetwork.wall("Charlie");
+    }
+
+    @Test
+    public void fullStory() {
+        setupClockAnswers(
+            date(2015, 12, 28, 20, 00),
+            date(2015, 12, 28, 20, 03),
+            date(2015, 12, 28, 20, 04),
+
+            date(2015, 12, 28, 20, 05),
+            date(2015, 12, 28, 20, 05),
+
+            date(2015, 12, 28, 20, 05, 10),
+
+            date(2015, 12, 28, 20, 05, 12),
+            date(2015, 12, 28, 20, 05, 25)
+        );
+
+        setupOutputAsserts(
+            "I love the weather today (5 minutes ago)",
+
+            "Good game though. (1 minute ago)",
+            "Damn! We lost! (2 minutes ago)",
+
+            "Charlie - I'm in New York today! Anyone wants to have a coffee? (2 seconds ago)",
+            "Alice - I love the weather today (5 minutes ago)",
+
+            "Charlie - I'm in New York today! Anyone wants to have a coffee? (15 seconds ago)",
+            "Bob - Good game though. (1 minute ago)",
+            "Bob - Damn! We lost! (2 minutes ago)",
+            "Alice - I love the weather today (5 minutes ago)"
+        );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Bob", "Damn! We lost!");
+        socialNetwork.post("Bob", "Good game though.");
+
+        socialNetwork.reading("Alice");
+        socialNetwork.reading("Bob");
+
+        socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
+
+        socialNetwork.subscribe("Charlie", "Alice");
+        socialNetwork.wall("Charlie");
+        socialNetwork.subscribe("Charlie", "Bob");
         socialNetwork.wall("Charlie");
     }
 
