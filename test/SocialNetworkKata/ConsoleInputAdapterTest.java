@@ -4,6 +4,7 @@ import SocialNetworkKata.IO.ConsoleInputAdapter;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +21,11 @@ public class ConsoleInputAdapterTest {
         consoleInputAdapter = new ConsoleInputAdapter(socialNetwork);
     }
 
+    @After
+    public void tearDown() {
+        context.assertIsSatisfied();
+    }
+
     @Test
     public void passingUsername_willTriggerReadingCommand() {
         context.checking(new Expectations() {{
@@ -27,7 +33,6 @@ public class ConsoleInputAdapterTest {
         }});
 
         consoleInputAdapter.command("Username");
-        context.assertIsSatisfied();
     }
 
     @Test
@@ -37,6 +42,14 @@ public class ConsoleInputAdapterTest {
         }});
 
         consoleInputAdapter.command("Username -> This is the message");
-        context.assertIsSatisfied();
+    }
+
+    @Test
+    public void readAWall() {
+        context.checking(new Expectations() {{
+            oneOf(socialNetwork).wall("Username");
+        }});
+
+        consoleInputAdapter.command("Username wall");
     }
 }
