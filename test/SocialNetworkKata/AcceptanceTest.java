@@ -3,6 +3,7 @@ package SocialNetworkKata;
 import SocialNetworkKata.IO.OutputAdapter;
 
 import SocialNetworkKata.Repositories.InMemoryPostRepository;
+import SocialNetworkKata.Repositories.InMemorySubscriptionRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.After;
@@ -28,7 +29,8 @@ public class AcceptanceTest {
 
         socialNetwork = new SocialNetwork(
             clock, outputAdapter,
-            new InMemoryPostRepository()
+            new InMemoryPostRepository(),
+            new InMemorySubscriptionRepository()
         );
     }
 
@@ -109,7 +111,6 @@ public class AcceptanceTest {
     }
 
     @Test
-    @Ignore
     public void charlieSubscribesToAlicesTimelineAndReadHisWall() {
         setupClockAnswers(
             date(2015, 12, 28, 15, 50, 0),
@@ -123,7 +124,7 @@ public class AcceptanceTest {
 
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
-        //socialNetwork.subscribe("Charlie", "Alice");
+        socialNetwork.subscribe("Charlie", "Alice");
         socialNetwork.wall("Charlie");
     }
 
