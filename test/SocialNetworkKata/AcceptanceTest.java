@@ -38,8 +38,8 @@ public class AcceptanceTest {
     }
 
     @Test
-    public void readingInexistentUsername_printsBlankLine() {
-        setupOutputAsserts("");
+    public void readingInexistentUsername_printsNoMessage() {
+        setupClockAnswers(date(2015, 12, 28, 18, 38));
         socialNetwork.reading("Inexistent");
     }
 
@@ -106,6 +106,25 @@ public class AcceptanceTest {
         );
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.wall("Alice");
+    }
+
+    @Test
+    @Ignore
+    public void charlieSubscribesToAlicesTimelineAndReadHisWall() {
+        setupClockAnswers(
+            date(2015, 12, 28, 15, 50, 0),
+            date(2015, 12, 28, 15, 54, 58),
+            date(2015, 12, 28, 15, 55, 0)
+        );
+        setupOutputAsserts(
+            "Charlie - I'm in New York today! Anyone wants to have a coffee? (2 seconds ago)",
+            "Alice - I love the weather today (5 minutes ago)"
+        );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
+        //socialNetwork.subscribe("Charlie", "Alice");
+        socialNetwork.wall("Charlie");
     }
 
     private void setupOutputAsserts(String... messages) {

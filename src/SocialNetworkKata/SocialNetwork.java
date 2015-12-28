@@ -19,17 +19,10 @@ public class SocialNetwork implements ISocialNetwork {
     }
 
     public void reading(String username) {
-
-        List<Post> found = postRepository.getByUsername(username);
-        if(found.size() == 0) {
-            output.printNewMessage("");
-            return;
-        }
-
         GregorianCalendar now = clock.now();
+        List<Post> found = postRepository.getByUsername(username);
         for(Post post : found) {
-            String postToString = post.toString(now);
-            output.printNewMessage(postToString);
+            output.printNewMessage(post.toString(now));
         }
     }
 
