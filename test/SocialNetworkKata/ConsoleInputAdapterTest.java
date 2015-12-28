@@ -1,6 +1,6 @@
 package SocialNetworkKata;
 
-import SocialNetworkKata.IO.ConsoleInputAdapter;
+import SocialNetworkKata.IO.Console.ConsoleInputAdapter;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
