@@ -5,7 +5,9 @@ import SocialNetworkKata.IO.OutputAdapter;
 import SocialNetworkKata.Repositories.InMemoryPostRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -25,16 +27,20 @@ public class AcceptanceTest {
         clock = context.mock(Clock.class);
 
         socialNetwork = new SocialNetwork(
-            clock, outputAdapter, new InMemoryPostRepository()
+            clock, outputAdapter,
+            new InMemoryPostRepository()
         );
+    }
+
+    @After
+    public void tearDown() {
+        context.assertIsSatisfied();
     }
 
     @Test
     public void readingInexistentUsername_printsBlankLine() {
         setupOutputAsserts("");
-
         socialNetwork.reading("Inexistent");
-        context.assertIsSatisfied();
     }
 
     @Test
@@ -47,8 +53,6 @@ public class AcceptanceTest {
 
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.reading("Alice");
-
-        context.assertIsSatisfied();
     }
 
     @Test
@@ -89,6 +93,19 @@ public class AcceptanceTest {
         socialNetwork.post("Alice", "I love the weather today");
         socialNetwork.post("Alice", "It's sunny");
         socialNetwork.reading("Alice");
+    }
+
+    @Test
+    public void aliceReadsHerWall() {
+        setupClockAnswers(
+            date(2015, 12, 28, 16, 35, 0),
+            date(2015, 12, 28, 16, 40, 0)
+        );
+        setupOutputAsserts(
+            "Alice - I love the weather today (5 minutes ago)"
+        );
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.wall("Alice");
     }
 
     private void setupOutputAsserts(String... messages) {

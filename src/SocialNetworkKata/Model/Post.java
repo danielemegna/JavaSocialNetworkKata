@@ -56,4 +56,8 @@ public class Post {
         long diffMillis = to.getTimeInMillis() - getDate().getTimeInMillis();
         return diffMillis / 1000;
     }
+
+    public String toStringWithAuthor(GregorianCalendar now) {
+        return String.format("%s - %s", getUsername(), toString(now));
+    }
 }
