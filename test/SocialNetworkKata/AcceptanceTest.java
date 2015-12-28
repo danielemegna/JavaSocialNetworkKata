@@ -6,7 +6,6 @@ import SocialNetworkKata.Repositories.InMemoryPostRepository;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -40,7 +39,7 @@ public class AcceptanceTest {
 
     @Test
     public void readingAPostedMessage() {
-        setupClock(
+        setupClockAnswers(
             date(2015, 11, 29, 00, 35),
             date(2015, 11, 29, 00, 40)
         );
@@ -54,7 +53,7 @@ public class AcceptanceTest {
 
     @Test
     public void aliceAndBobPostingScenario() {
-        setupClock(
+        setupClockAnswers(
             date(2015, 12, 06, 17, 5),
             date(2015, 12, 06, 17, 8),
             date(2015, 12, 06, 17, 9),
@@ -77,7 +76,7 @@ public class AcceptanceTest {
 
     @Test
     public void readingMessageSomeSecondsAgo() {
-        setupClock(
+        setupClockAnswers(
             date(2015, 12, 7, 12, 30, 0),
             date(2015, 12, 7, 12, 30, 2),
             date(2015, 12, 7, 12, 30, 3)
@@ -99,7 +98,7 @@ public class AcceptanceTest {
         }});
     }
 
-    private void setupClock(GregorianCalendar... calendars) {
+    private void setupClockAnswers(GregorianCalendar... calendars) {
         org.jmock.api.Action[] calendarsToActions = Arrays.stream(calendars)
             .map(c -> org.jmock.Expectations.returnValue(c))
             .toArray(org.jmock.api.Action[]::new);
