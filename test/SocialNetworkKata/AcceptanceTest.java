@@ -18,7 +18,7 @@ public class AcceptanceTest {
     private Mockery context;
     private OutputAdapter outputAdapter;
     private Clock clock;
-    private SocialNetwork socialNetwork;
+    private ISocialNetwork socialNetwork;
 
     @Before
     public void setUp() {
