@@ -16,6 +16,7 @@ public class ConsoleInputAdapter implements InputAdapter {
         this.commandMatchers = new ArrayList<CommandMatcher>() {{
             add(new PostMessageCommandMatcher());
             add(new ReadWallCommandMatcher());
+            add(new SubscribeCommandMatcher());
             add(new ReadUserCommandMatcher());
         }};
     }

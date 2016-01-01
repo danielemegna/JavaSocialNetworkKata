@@ -52,4 +52,13 @@ public class ConsoleInputAdapterTest {
 
         consoleInputAdapter.command("Username wall");
     }
+
+    @Test
+    public void subscribeToAWall() {
+        context.checking(new Expectations() {{
+            oneOf(socialNetwork).subscribe("Follower", "Followed");
+        }});
+
+        consoleInputAdapter.command("Follower follows Followed");
+    }
 }
