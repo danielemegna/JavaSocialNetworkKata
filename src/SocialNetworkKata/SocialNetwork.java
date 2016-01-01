@@ -8,6 +8,9 @@ import SocialNetworkKata.Repositories.SubscriptionRepository;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
 
 public class SocialNetwork implements ISocialNetwork {
     private final Clock clock;
@@ -47,6 +50,10 @@ public class SocialNetwork implements ISocialNetwork {
         List<Post> merged = new ArrayList<>();
         merged.addAll(readerPosts);
         merged.addAll(followedPosts);
+
+        merged = merged.stream()
+            .sorted(comparing(Post::getDate).reversed())
+            .collect(Collectors.toList());
 
         for(Post post : merged)
             output.printNewMessage(post.toStringWithAuthor(now));

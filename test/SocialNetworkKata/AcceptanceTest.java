@@ -129,7 +129,31 @@ public class AcceptanceTest {
     }
 
     @Test
-    public void fullStory() {
+    public void onWallMessagesOrderMatters() {
+        setupClockAnswers(
+            date(2015, 12, 31, 20, 17),
+            date(2015, 12, 31, 20, 20),
+            date(2015, 12, 31, 20, 24),
+            date(2015, 12, 31, 20, 25)
+        );
+
+        setupOutputAsserts(
+            "Alberto - In via Giambellino! (1 minute ago)",
+            "Daniele - Ho capito, ma dove abita marta? (5 minutes ago)",
+            "Alberto - Ci vediamo a casa di Marta! (8 minutes ago)"
+        );
+
+        socialNetwork.subscribe("Daniele", "Alberto");
+
+        socialNetwork.post("Alberto", "Ci vediamo a casa di Marta!");
+        socialNetwork.post("Daniele", "Ho capito, ma dove abita marta?");
+        socialNetwork.post("Alberto", "In via Giambellino!");
+
+        socialNetwork.wall("Daniele");
+    }
+
+    @Test
+    public void fullAcceptanceStory() {
         setupClockAnswers(
             date(2015, 12, 28, 20, 00),
             date(2015, 12, 28, 20, 03),
