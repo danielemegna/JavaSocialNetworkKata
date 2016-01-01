@@ -21,7 +21,7 @@ public class InMemoryPostRepository implements PostRepository {
     @Override
     public List<Post> getByUsername(String username) {
         return this.posts.stream()
-            .filter(post -> post.getUsername() == username)
+            .filter(post -> post.getUsername().equals(username))
             .sorted(comparing(Post::getDate).reversed())
             .collect(Collectors.toList());
     }
@@ -30,7 +30,7 @@ public class InMemoryPostRepository implements PostRepository {
     public List<Post> getForWall(String reader, Collection<String> followed) {
         return this.posts.stream()
             .filter(post -> {
-                return post.getUsername() == reader ||
+                return post.getUsername().equals(reader) ||
                     followed.contains(post.getUsername());
             })
             .sorted(comparing(Post::getDate).reversed())
