@@ -50,9 +50,10 @@ public class AcceptanceTest {
             date(2015, 11, 29, 00, 35),
             date(2015, 11, 29, 00, 40)
         );
-        setupOutputAsserts("I love the weather today (5 minutes ago)");
 
         socialNetwork.post("Alice", "I love the weather today");
+
+        setupOutputAsserts("I love the weather today (5 minutes ago)");
         socialNetwork.reading("Alice");
     }
 
@@ -65,15 +66,16 @@ public class AcceptanceTest {
             date(2015, 12, 06, 17, 10),
             date(2015, 12, 06, 17, 10)
         );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Bob", "Damn! We lost!");
+        socialNetwork.post("Bob", "Good game though.");
+
         setupOutputAsserts(
             "I love the weather today (5 minutes ago)",
             "Good game though. (1 minute ago)",
             "Damn! We lost! (2 minutes ago)"
         );
-
-        socialNetwork.post("Alice", "I love the weather today");
-        socialNetwork.post("Bob", "Damn! We lost!");
-        socialNetwork.post("Bob", "Good game though.");
 
         socialNetwork.reading("Alice");
         socialNetwork.reading("Bob");
@@ -86,13 +88,14 @@ public class AcceptanceTest {
             date(2015, 12, 7, 12, 30, 2),
             date(2015, 12, 7, 12, 30, 3)
         );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Alice", "It's sunny");
+
         setupOutputAsserts(
             "It's sunny (1 second ago)",
             "I love the weather today (3 seconds ago)"
         );
-
-        socialNetwork.post("Alice", "I love the weather today");
-        socialNetwork.post("Alice", "It's sunny");
         socialNetwork.reading("Alice");
     }
 
@@ -102,11 +105,10 @@ public class AcceptanceTest {
             date(2015, 12, 28, 16, 35, 0),
             date(2015, 12, 28, 16, 40, 0)
         );
-        setupOutputAsserts(
-            "Alice - I love the weather today (5 minutes ago)"
-        );
 
         socialNetwork.post("Alice", "I love the weather today");
+
+        setupOutputAsserts("Alice - I love the weather today (5 minutes ago)");
         socialNetwork.wall("Alice");
     }
 
@@ -117,14 +119,16 @@ public class AcceptanceTest {
             date(2015, 12, 28, 15, 54, 58),
             date(2015, 12, 28, 15, 55, 0)
         );
+
+        socialNetwork.post("Alice", "I love the weather today");
+        socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
+        socialNetwork.subscribe("Charlie", "Alice");
+
         setupOutputAsserts(
             "Charlie - I'm in New York today! Anyone wants to have a coffee? (2 seconds ago)",
             "Alice - I love the weather today (5 minutes ago)"
         );
 
-        socialNetwork.post("Alice", "I love the weather today");
-        socialNetwork.post("Charlie", "I'm in New York today! Anyone wants to have a coffee?");
-        socialNetwork.subscribe("Charlie", "Alice");
         socialNetwork.wall("Charlie");
     }
 
@@ -137,17 +141,17 @@ public class AcceptanceTest {
             date(2015, 12, 31, 20, 25)
         );
 
-        setupOutputAsserts(
-            "Alberto - In via Giambellino! (1 minute ago)",
-            "Daniele - Ho capito, ma dove abita marta? (5 minutes ago)",
-            "Alberto - Ci vediamo a casa di Marta! (8 minutes ago)"
-        );
-
         socialNetwork.subscribe("Daniele", "Alberto");
 
         socialNetwork.post("Alberto", "Ci vediamo a casa di Marta!");
         socialNetwork.post("Daniele", "Ho capito, ma dove abita marta?");
         socialNetwork.post("Alberto", "In via Giambellino!");
+
+        setupOutputAsserts(
+            "Alberto - In via Giambellino! (1 minute ago)",
+            "Daniele - Ho capito, ma dove abita marta? (5 minutes ago)",
+            "Alberto - Ci vediamo a casa di Marta! (8 minutes ago)"
+        );
 
         socialNetwork.wall("Daniele");
     }
