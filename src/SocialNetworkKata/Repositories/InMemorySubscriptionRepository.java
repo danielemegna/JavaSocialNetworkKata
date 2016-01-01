@@ -11,7 +11,7 @@ public class InMemorySubscriptionRepository implements SubscriptionRepository {
         storeSubscription(follower, followed);
     }
 
-    public Set<String> getFollowed(String username) {
+    public Collection<String> getFollowed(String username) {
         if(!knownUsername(username))
             return new HashSet<>();
 

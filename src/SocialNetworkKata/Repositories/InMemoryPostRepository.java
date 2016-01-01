@@ -3,6 +3,7 @@ package SocialNetworkKata.Repositories;
 import SocialNetworkKata.Model.Post;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,17 @@ public class InMemoryPostRepository implements PostRepository {
     public List<Post> getByUsername(String username) {
         return this.posts.stream()
             .filter(post -> post.getUsername() == username)
+            .sorted(comparing(Post::getDate).reversed())
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Post> getForWall(String reader, Collection<String> followed) {
+        return this.posts.stream()
+            .filter(post -> {
+                return post.getUsername() == reader ||
+                    followed.contains(post.getUsername());
+            })
             .sorted(comparing(Post::getDate).reversed())
             .collect(Collectors.toList());
     }

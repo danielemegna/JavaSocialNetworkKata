@@ -1,8 +1,8 @@
 package SocialNetworkKata.Repositories;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface SubscriptionRepository {
     void add(String follower, String followed);
-    Set<String> getFollowed(String username);
+    Collection<String> getFollowed(String username);
 }

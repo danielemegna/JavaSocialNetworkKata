@@ -5,12 +5,9 @@ import SocialNetworkKata.Model.Post;
 import SocialNetworkKata.Repositories.PostRepository;
 import SocialNetworkKata.Repositories.SubscriptionRepository;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.Comparator.comparing;
 
 public class SocialNetwork implements ISocialNetwork {
     private final Clock clock;
@@ -27,39 +24,31 @@ public class SocialNetwork implements ISocialNetwork {
     }
 
     public void reading(String username) {
-        GregorianCalendar now = clock.now();
-        List<Post> found = postRepository.getByUsername(username);
-        for(Post post : found) {
-            output.printNewMessage(post.toString(now));
-        }
+        printsPosts(postRepository.getByUsername(username));
+    }
+
+    public void wall(String reader) {
+        Collection<String> followed = subscriptionRepository.getFollowed(reader);
+        printsPostsWithAuthors(postRepository.getForWall(reader, followed));
     }
 
     public void post(String username, String message) {
         postRepository.add(username, message, clock.now());
     }
 
-    public void wall(String reader) {
-        GregorianCalendar now = clock.now();
-
-        List<Post> readerPosts = postRepository.getByUsername(reader);
-
-        List<Post> followedPosts = new ArrayList<>();
-        for(String followed : subscriptionRepository.getFollowed(reader))
-            followedPosts.addAll(postRepository.getByUsername(followed));
-
-        List<Post> merged = new ArrayList<>();
-        merged.addAll(readerPosts);
-        merged.addAll(followedPosts);
-
-        merged = merged.stream()
-            .sorted(comparing(Post::getDate).reversed())
-            .collect(Collectors.toList());
-
-        for(Post post : merged)
-            output.printNewMessage(post.toStringWithAuthor(now));
-    }
-
     public void subscribe(String follower, String followed) {
        subscriptionRepository.add(follower, followed);
+    }
+
+    private void printsPosts(List<Post> found) {
+        GregorianCalendar now = clock.now();
+        for(Post post : found)
+            output.printNewMessage(post.toString(now));
+    }
+
+    private void printsPostsWithAuthors(List<Post> found) {
+        GregorianCalendar now = clock.now();
+        for(Post post : found)
+            output.printNewMessage(post.toStringWithAuthor(now));
     }
 }
