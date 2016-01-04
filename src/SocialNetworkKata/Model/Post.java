@@ -25,39 +25,4 @@ public class Post {
         return date;
     }
 
-    public String toString(GregorianCalendar now) {
-        return String.format(
-            "%s (%s)",
-            getMessage(),
-            getTimeDiffString(now)
-        );
-    }
-
-    private String getTimeDiffString(GregorianCalendar to) {
-        String unit = "minute";
-        long qta = diffInMinutes(to);
-
-        if(qta == 0) {
-            qta = diffInSeconds(to);
-            unit = "second";
-        }
-
-        if(qta > 1)
-            unit += "s";
-
-        return String.format("%d %s ago", qta, unit);
-    }
-
-    private long diffInMinutes(GregorianCalendar to) {
-        return diffInSeconds(to) / 60 % 60;
-    }
-
-    private long diffInSeconds(GregorianCalendar to) {
-        long diffMillis = to.getTimeInMillis() - getDate().getTimeInMillis();
-        return diffMillis / 1000;
-    }
-
-    public String toStringWithAuthor(GregorianCalendar now) {
-        return String.format("%s - %s", getUsername(), toString(now));
-    }
 }

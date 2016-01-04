@@ -2,11 +2,12 @@ package SocialNetworkKata;
 
 import SocialNetworkKata.IO.OutputAdapter;
 import SocialNetworkKata.Model.Post;
+import SocialNetworkKata.PostPrinter.TimelinePostPostPrinter;
+import SocialNetworkKata.PostPrinter.WallPostPostPrinter;
 import SocialNetworkKata.Repositories.PostRepository;
 import SocialNetworkKata.Repositories.SubscriptionRepository;
 
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class SocialNetwork implements ISocialNetwork {
@@ -24,12 +25,14 @@ public class SocialNetwork implements ISocialNetwork {
     }
 
     public void reading(String username) {
-        printsPosts(postRepository.getByUsername(username));
+        List<Post> posts = postRepository.getByUsername(username);
+        new TimelinePostPostPrinter(output).print(posts, clock.now());
     }
 
     public void wall(String reader) {
         Collection<String> followed = subscriptionRepository.getFollowed(reader);
-        printsPostsWithAuthors(postRepository.getForWall(reader, followed));
+        List<Post> posts = postRepository.getForWall(reader, followed);
+        new WallPostPostPrinter(output).print(posts, clock.now());
     }
 
     public void post(String username, String message) {
@@ -38,17 +41,5 @@ public class SocialNetwork implements ISocialNetwork {
 
     public void subscribe(String follower, String followed) {
        subscriptionRepository.add(follower, followed);
-    }
-
-    private void printsPosts(List<Post> found) {
-        GregorianCalendar now = clock.now();
-        for(Post post : found)
-            output.printNewMessage(post.toString(now));
-    }
-
-    private void printsPostsWithAuthors(List<Post> found) {
-        GregorianCalendar now = clock.now();
-        for(Post post : found)
-            output.printNewMessage(post.toStringWithAuthor(now));
     }
 }

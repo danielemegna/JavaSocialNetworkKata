@@ -205,7 +205,7 @@ public class AcceptanceTest {
     private void setupOutputAsserts(String... messages) {
         context.checking(new Expectations() {{
             for(String message : messages)
-                oneOf(outputAdapter).printNewMessage(message);
+                oneOf(outputAdapter).out(message);
         }});
     }
 
